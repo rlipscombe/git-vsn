@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# parse the output from 'git describe'; assume version tags are vX.Y.Z
+description=$(git describe --long --abbrev=10 --match 'v*')
+re='^v([0-9]+)\.([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-f]+)$'
+
+if [[ $description =~ $re ]]; then
+    ver_major="${BASH_REMATCH[1]}"
+    ver_minor="${BASH_REMATCH[2]}"
+    ver_patch="${BASH_REMATCH[3]}"
+    commits="${BASH_REMATCH[4]}"
+    sha="${BASH_REMATCH[5]}"
+else
+    echo "Error: '${description}' didn't match regex"
+    exit 1
+fi
+
+echo "${ver_major}.${ver_minor}.${ver_patch}+${commits}.${sha}"
