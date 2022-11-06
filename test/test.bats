@@ -59,6 +59,19 @@ setup() {
     assert_output '1.0.0+0.5fcf07cb8e.dirty'
 }
 
+@test "single tag, after tag, committed file, not pushed" {
+    git tag -a -m "v1.0.0" v1.0.0
+    touch committed-file
+    git add committed-file
+
+    GIT_COMMITTER_DATE='2022-11-06T17:24:45Z' \
+    GIT_AUTHOR_DATE='2022-11-06T17:24:45Z' \
+        git commit -m "committed-file"
+    run git-vsn
+
+    assert_output '1.0.0+1.f11a3c209b.dirty'
+}
+
 @test "single tag, at tag, changed file" {
     git tag -a -m "v1.0.0" v1.0.0
     touch changed-file
@@ -71,4 +84,26 @@ setup() {
     run git-vsn
 
     assert_output '1.0.0+1.ab51346374.dirty'
+}
+
+@test "single tag, after tag, pushed file" {
+    git tag -a -m "v1.0.0" v1.0.0
+    touch changed-file
+    git add changed-file
+
+    GIT_COMMITTER_DATE='2022-11-06T17:24:45Z' \
+    GIT_AUTHOR_DATE='2022-11-06T17:24:45Z' \
+        git commit -m "changed-file"
+    echo 'change' >> changed-file
+
+    git add changed-file
+
+    GIT_COMMITTER_DATE='2022-11-06T17:30:45Z' \
+    GIT_AUTHOR_DATE='2022-11-06T17:30:45Z' \
+        git commit -m "changed-file"
+    git push
+
+    run git-vsn
+
+    assert_output '1.0.0+2.c89fc10692'
 }
