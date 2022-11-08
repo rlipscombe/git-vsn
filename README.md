@@ -10,7 +10,7 @@ Run it from within a git repo that you want to generate a version for:
 
     cd path/to/your-repo
 
-You can put it somewhere in `$PATH`; you can run it as `/path/to/git-vsn`;
+You can put `git-vsn` somewhere in `$PATH`; you can run it as `/path/to/git-vsn`;
 you can put it somewhere in the repo and run it with (e.g.) `./scripts/git-vsn`. It doesn't care.
 
 ## Testing
