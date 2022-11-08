@@ -107,3 +107,11 @@ setup() {
 
     assert_output '1.0.0+2.c89fc10692'
 }
+
+@test "GIT_VSN environment variable overrides behaviour" {
+    git tag -a -m "v1.0.0" v1.0.0
+    export GIT_VSN=1.2.0+0.5fcf07cb8e
+    run git-vsn
+
+    assert_output '1.2.0+0.5fcf07cb8e'
+}

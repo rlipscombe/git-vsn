@@ -6,6 +6,12 @@
 
 ABBREV=10
 
+# allow explicitly setting the version (in a parent Makefile, e.g.):
+if [ -n "$GIT_VSN" ]; then
+    echo "$GIT_VSN"
+    exit 0
+fi
+
 # refresh the index
 git status >/dev/null 2>&1
 
