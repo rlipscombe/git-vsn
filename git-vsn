@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Originally from https://github.com/rlipscombe/git-vsn
+# See https://blog.differentpla.net/blog/2022/11/05/git-vsn/
+# License: MIT
+
 ABBREV=10
 
 # refresh the index
