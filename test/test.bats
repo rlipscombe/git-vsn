@@ -11,9 +11,9 @@ setup() {
     PATH="$TOP:$PATH"
 
     # create a scratch git repo
-    TMP=$TOP/tmp/work-$$
-    mkdir -p $TMP
-    cd $TMP
+    WORKTREE="$BATS_TEST_TMPDIR/work"
+    mkdir -p "$WORKTREE"
+    cd "$WORKTREE"
     git init --quiet
 
     # can't commit without a user/email
@@ -26,11 +26,16 @@ setup() {
         git commit --allow-empty -m "Initial commit"
 
     # we need a remote
-    REMOTE=$TOP/tmp/remote-$$
-    git init --quiet --bare $REMOTE
+    REMOTE="$BATS_TEST_TMPDIR/remote"
+    git init --quiet --bare "$REMOTE"
 
-    git remote add origin $REMOTE
+    git remote add origin "$REMOTE"
     git push -u origin master
+}
+
+@test "should fail if no tags" {
+    run git-vsn
+    assert_failure
 }
 
 @test "single tag, at tag, clean" {
@@ -114,4 +119,15 @@ setup() {
     run git-vsn
 
     assert_output '1.2.0+0.5fcf07cb8e'
+}
+
+@test ".git-vsn file is ignored inside work tree" {
+    # you only need the .git-vsn file if you're not inside the work tree
+    # if you've just built a tarball and have a .git-vsn file, you want to
+    # ignore it inside the work tree.
+    git tag -a -m "v1.0.0" v1.0.0
+    echo "1.2.0+0.5fcf07cb8e" > .git-vsn
+    run git-vsn
+
+    assert_output '1.0.0+0.5fcf07cb8e'
 }
