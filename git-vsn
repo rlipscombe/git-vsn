@@ -64,11 +64,20 @@ else
     exit 1
 fi
 
-# if there are commits, assume we're working on the next version; increment minor, clear patch and add a -pre suffix.
+# if there are commits, assume we're working on the next version
 if [[ "$commits" -gt 0 ]]; then
-    ((ver_minor++))
-    ver_patch=0
+    re='^v([0-9]+)\.([0-9]+)'
+    branch=$(git branch --show-current)
+    if [[ $branch =~ $re ]]; then
+        # we're on a maintenance branch; increment patch
+        ((ver_patch++))
+    else
+        # trunk; increment minor, clear patch
+        ((ver_minor++))
+        ver_patch=0
+    fi
 
+    # add a -pre suffix.
     pre="-pre"
 fi
 
