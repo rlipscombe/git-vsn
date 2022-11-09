@@ -115,3 +115,14 @@ setup() {
 
     assert_output '1.2.0+0.5fcf07cb8e'
 }
+
+@test ".git-vsn file is ignored inside work tree" {
+    # you only need the .git-vsn file if you're not inside the work tree
+    # if you've just built a tarball and have a .git-vsn file, you want to
+    # ignore it inside the work tree.
+    git tag -a -m "v1.0.0" v1.0.0
+    echo "1.2.0+0.5fcf07cb8e" > .git-vsn
+    run git-vsn
+
+    assert_output '1.0.0+0.5fcf07cb8e'
+}
