@@ -33,6 +33,11 @@ setup() {
     git push -u origin master
 }
 
+@test "should fail if no tags" {
+    run git-vsn
+    assert_failure
+}
+
 @test "single tag, at tag, clean" {
     git tag -a -m "v1.0.0" v1.0.0
     run git-vsn
