@@ -64,6 +64,14 @@ else
     exit 1
 fi
 
+# if there are commits, assume we're working on the next version; increment minor, clear patch and add a -pre suffix.
+if [[ "$commits" -gt 0 ]]; then
+    ((ver_minor++))
+    ver_patch=0
+
+    pre="-pre"
+fi
+
 # are there local/staged changes?
 dirty=$(git diff-index --quiet HEAD || echo ".dirty")
 
@@ -73,4 +81,4 @@ if [ "$remote_branch" == "" ]; then
     dirty=".dirty"
 fi
 
-echo "${ver_major}.${ver_minor}.${ver_patch}+${commits}.${sha}${dirty}"
+echo "${ver_major}.${ver_minor}.${ver_patch}${pre}+${sha}${dirty}"

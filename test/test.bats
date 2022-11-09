@@ -43,7 +43,7 @@ setup() {
     run git-vsn
 
     # TODO: Doesn't spot that the tag is not pushed.
-    assert_output '1.0.0+0.5fcf07cb8e'
+    assert_output '1.0.0+5fcf07cb8e'
 }
 
 @test "single tag, at tag, new file" {
@@ -51,8 +51,9 @@ setup() {
     touch new-file
     run git-vsn
 
-    # TODO: I don't think we pay attention to new files, only changed files.
-    assert_output '1.0.0+0.5fcf07cb8e'
+    # Note: we don't add '.dirty' for new files that aren't staged or committed; since your build process might generate
+    # them, which would pollute the version number. Only changed files add '.dirty'.
+    assert_output '1.0.0+5fcf07cb8e'
 }
 
 @test "single tag, at tag, staged changes" {
@@ -61,7 +62,7 @@ setup() {
     git add staged-change
     run git-vsn
 
-    assert_output '1.0.0+0.5fcf07cb8e.dirty'
+    assert_output '1.0.0+5fcf07cb8e.dirty'
 }
 
 @test "single tag, after tag, committed file, not pushed" {
@@ -74,7 +75,7 @@ setup() {
         git commit -m "committed-file"
     run git-vsn
 
-    assert_output '1.0.0+1.f11a3c209b.dirty'
+    assert_output '1.1.0-pre+f11a3c209b.dirty'
 }
 
 @test "single tag, at tag, changed file" {
@@ -88,7 +89,7 @@ setup() {
     echo 'change' >> changed-file
     run git-vsn
 
-    assert_output '1.0.0+1.ab51346374.dirty'
+    assert_output '1.1.0-pre+ab51346374.dirty'
 }
 
 @test "single tag, after tag, pushed file" {
@@ -110,15 +111,15 @@ setup() {
 
     run git-vsn
 
-    assert_output '1.0.0+2.c89fc10692'
+    assert_output '1.1.0-pre+c89fc10692'
 }
 
 @test "GIT_VSN environment variable overrides behaviour" {
     git tag -a -m "v1.0.0" v1.0.0
-    export GIT_VSN=1.2.0+0.5fcf07cb8e
+    export GIT_VSN=1.2.0+5fcf07cb8e
     run git-vsn
 
-    assert_output '1.2.0+0.5fcf07cb8e'
+    assert_output '1.2.0+5fcf07cb8e'
 }
 
 @test ".git-vsn file is ignored inside work tree" {
@@ -126,8 +127,8 @@ setup() {
     # if you've just built a tarball and have a .git-vsn file, you want to
     # ignore it inside the work tree.
     git tag -a -m "v1.0.0" v1.0.0
-    echo "1.2.0+0.5fcf07cb8e" > .git-vsn
+    echo "1.2.0+5fcf07cb8e" > .git-vsn
     run git-vsn
 
-    assert_output '1.0.0+0.5fcf07cb8e'
+    assert_output '1.0.0+5fcf07cb8e'
 }
