@@ -11,9 +11,9 @@ setup() {
     PATH="$TOP:$PATH"
 
     # create a scratch git repo
-    TMP=$TOP/tmp/work-$$
-    mkdir -p $TMP
-    cd $TMP
+    WORKTREE="$BATS_TEST_TMPDIR/work"
+    mkdir -p "$WORKTREE"
+    cd "$WORKTREE"
     git init --quiet
 
     # can't commit without a user/email
@@ -26,10 +26,10 @@ setup() {
         git commit --allow-empty -m "Initial commit"
 
     # we need a remote
-    REMOTE=$TOP/tmp/remote-$$
-    git init --quiet --bare $REMOTE
+    REMOTE="$BATS_TEST_TMPDIR/remote"
+    git init --quiet --bare "$REMOTE"
 
-    git remote add origin $REMOTE
+    git remote add origin "$REMOTE"
     git push -u origin master
 }
 
