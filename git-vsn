@@ -62,8 +62,10 @@ fi
 # refresh the index
 git status >/dev/null 2>&1
 
-# parse the output from 'git describe'; assume version tags are vX.Y.Z
-tag_glob="${TAG_PREFIX}[0-9].[0-9].[0-9]*"
+# parse the output from 'git describe'; note that if TAG_PREFIX is empty, this'll pick up non-version-looking tags,
+# and things will break.
+# TODO: Consider using git for-each-ref instead, but it's going to mean building our own topo-sort to find the closest tag.
+tag_glob="${TAG_PREFIX}*"
 describe_re="^${TAG_PREFIX}([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g([0-9a-f]+)\$"
 
 if ! description=$(git describe --long --abbrev=$ABBREV --match "$tag_glob"); then
