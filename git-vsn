@@ -46,14 +46,15 @@ fi
 git status >/dev/null 2>&1
 
 # parse the output from 'git describe'; assume version tags are vX.Y.Z
-re='^v([0-9]+)\.([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-f]+)$'
-description=$(git describe --long --abbrev=$ABBREV --match 'v*')
+tag_glob='v*'
+describe_re='^v([0-9]+)\.([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-f]+)$'
+description=$(git describe --long --abbrev=$ABBREV --match "$tag_glob")
 
 if [ $? -ne 0 ]; then
     exit 1
 fi
 
-if [[ $description =~ $re ]]; then
+if [[ $description =~ $describe_re ]]; then
     ver_major="${BASH_REMATCH[1]}"
     ver_minor="${BASH_REMATCH[2]}"
     ver_patch="${BASH_REMATCH[3]}"
@@ -66,9 +67,9 @@ fi
 
 # if there are commits, assume we're working on the next version
 if [[ "$commits" -gt 0 ]]; then
-    re='^v([0-9]+)\.([0-9]+)'
+    branch_re='^v([0-9]+)\.([0-9]+)'
     branch=$(git branch --show-current)
-    if [[ $branch =~ $re ]]; then
+    if [[ $branch =~ $branch_re ]]; then
         # we're on a maintenance branch; increment patch
         ((ver_patch++))
     else
