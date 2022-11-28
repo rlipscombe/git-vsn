@@ -4,6 +4,7 @@
 # See https://blog.differentpla.net/blog/2022/11/05/git-vsn/
 # License: MIT
 
+TAG_PREFIX=v
 ABBREV=10
 
 # allow explicitly setting the version (in a parent Makefile, e.g.):
@@ -46,8 +47,8 @@ fi
 git status >/dev/null 2>&1
 
 # parse the output from 'git describe'; assume version tags are vX.Y.Z
-tag_glob='v[0-9].[0-9].[0-9]*'
-describe_re='^v([0-9]+)\.([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-f]+)$'
+tag_glob="${TAG_PREFIX}[0-9].[0-9].[0-9]*"
+describe_re="^${TAG_PREFIX}([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g([0-9a-f]+)\$"
 
 if ! description=$(git describe --long --abbrev=$ABBREV --match "$tag_glob"); then
     exit 1
@@ -66,7 +67,7 @@ fi
 
 # if there are commits, assume we're working on the next version
 if [[ "$commits" -gt 0 ]]; then
-    branch_re='^v([0-9]+)\.([0-9]+)'
+    branch_re="^${TAG_PREFIX}([0-9]+)\.([0-9]+)"
     branch=$(git branch --show-current)
     if [[ $branch =~ $branch_re ]]; then
         # we're on a maintenance branch; increment patch
