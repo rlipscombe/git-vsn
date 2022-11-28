@@ -68,7 +68,7 @@ git status >/dev/null 2>&1
 tag_glob="${TAG_PREFIX}*"
 describe_re="^${TAG_PREFIX}([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g([0-9a-f]+)\$"
 
-if ! description=$(git describe --long --abbrev=$ABBREV --match "$tag_glob"); then
+if ! description=$(git describe --long --abbrev="$ABBREV" --match "$tag_glob"); then
     exit 1
 fi
 
