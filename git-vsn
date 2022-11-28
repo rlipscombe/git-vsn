@@ -48,9 +48,8 @@ git status >/dev/null 2>&1
 # parse the output from 'git describe'; assume version tags are vX.Y.Z
 tag_glob='v*'
 describe_re='^v([0-9]+)\.([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-f]+)$'
-description=$(git describe --long --abbrev=$ABBREV --match "$tag_glob")
 
-if [ $? -ne 0 ]; then
+if ! description=$(git describe --long --abbrev=$ABBREV --match "$tag_glob"); then
     exit 1
 fi
 
