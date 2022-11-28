@@ -46,6 +46,27 @@ setup() {
     assert_output '1.0.0+5fcf07cb8e'
 }
 
+@test "single tag with two digits major, at tag, clean" {
+    git tag -a -m "v12.4.0" v12.4.0
+    run git-vsn -t v
+
+    assert_output '12.4.0+5fcf07cb8e'
+}
+
+@test "single tag with two digits minor, at tag, clean" {
+    git tag -a -m "v0.14.0" v0.14.0
+    run git-vsn -t v
+
+    assert_output '0.14.0+5fcf07cb8e'
+}
+
+@test "single tag with two digits patch, at tag, clean" {
+    git tag -a -m "v0.1.23" v0.1.23
+    run git-vsn -t v
+
+    assert_output '0.1.23+5fcf07cb8e'
+}
+
 @test "single tag, at tag, new file" {
     git tag -a -m "v1.0.0" v1.0.0
     touch new-file
