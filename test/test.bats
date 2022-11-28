@@ -39,7 +39,7 @@ setup() {
 }
 
 @test "single tag, at tag, clean" {
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     run git-vsn
 
     # TODO: Doesn't spot that the tag is not pushed.
@@ -47,7 +47,7 @@ setup() {
 }
 
 @test "single tag, at tag, new file" {
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     touch new-file
     run git-vsn
 
@@ -57,7 +57,7 @@ setup() {
 }
 
 @test "single tag, at tag, staged changes" {
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     touch staged-change
     git add staged-change
     run git-vsn
@@ -66,7 +66,7 @@ setup() {
 }
 
 @test "single tag, after tag, committed file, not pushed" {
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     touch committed-file
     git add committed-file
 
@@ -79,7 +79,7 @@ setup() {
 }
 
 @test "single tag, at tag, changed file" {
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     touch changed-file
     git add changed-file
 
@@ -93,7 +93,7 @@ setup() {
 }
 
 @test "single tag, after tag, pushed file" {
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     touch changed-file
     git add changed-file
 
@@ -115,7 +115,7 @@ setup() {
 }
 
 @test "GIT_VSN environment variable overrides behaviour" {
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     export GIT_VSN=1.2.0+5fcf07cb8e
     run git-vsn
 
@@ -126,7 +126,7 @@ setup() {
     # you only need the .git-vsn file if you're not inside the work tree
     # if you've just built a tarball and have a .git-vsn file, you want to
     # ignore it inside the work tree.
-    git tag -a -m "v1.0.0" v1.0.0
+    git tag -a -m "2.0.0" 2.0.0
     echo "1.2.0+5fcf07cb8e" > .git-vsn
     run git-vsn
 

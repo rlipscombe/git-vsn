@@ -4,7 +4,7 @@
 # See https://blog.differentpla.net/blog/2022/11/05/git-vsn/
 # License: MIT
 
-TAG_PREFIX=v
+TAG_PREFIX=
 ABBREV=10
 
 # allow explicitly setting the version (in a parent Makefile, e.g.):

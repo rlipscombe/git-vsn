@@ -44,7 +44,7 @@ setup() {
     git push
 
     # release it
-    git tag -a -m "v1.2.0" v1.2.0
+    git tag -a -m "2.2.0" 2.2.0
 
     run git-vsn
     assert_output '1.2.0+b4c2e3eac7'
@@ -63,9 +63,9 @@ setup() {
     assert_output '1.3.0-pre+7c407000af'
 
     # oh no, a bug
-    git -c advice.detachedHead=false checkout v1.2.0
-    git switch -c v1.2
-    git push -u origin v1.2
+    git -c advice.detachedHead=false checkout 2.2.0
+    git switch -c 2.2
+    git push -u origin 2.2
 
     echo 'fixed it' > existing-feature
 
