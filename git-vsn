@@ -4,8 +4,24 @@
 # See https://blog.differentpla.net/blog/2022/11/05/git-vsn/
 # License: MIT
 
-TAG_PREFIX=v
+TAG_PREFIX=
 ABBREV=10
+
+usage() { echo "Usage: $0 [-t <tag-prefix>] [-a <abbrev-len>]" 1>&2; exit 1; }
+
+while getopts "a:t:" opt; do
+    case $opt in
+        t)
+            TAG_PREFIX=${OPTARG}
+            ;;
+        a)
+            ABBREV=${OPTARG}
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
 
 # allow explicitly setting the version (in a parent Makefile, e.g.):
 if [ -n "$GIT_VSN" ]; then

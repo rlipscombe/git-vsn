@@ -46,7 +46,7 @@ setup() {
     # release it
     git tag -a -m "v1.2.0" v1.2.0
 
-    run git-vsn
+    run git-vsn -t v
     assert_output '1.2.0+b4c2e3eac7'
 
     # work on something new
@@ -59,7 +59,7 @@ setup() {
 
     git push
 
-    run git-vsn
+    run git-vsn -t v
     assert_output '1.3.0-pre+7c407000af'
 
     # oh no, a bug
@@ -77,6 +77,6 @@ setup() {
 
     git push
 
-    run git-vsn
+    run git-vsn -t v
     assert_output '1.2.1-pre+4da5c5dd06'
 }

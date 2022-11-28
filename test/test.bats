@@ -34,13 +34,13 @@ setup() {
 }
 
 @test "should fail if no tags" {
-    run git-vsn
+    run git-vsn -t v
     assert_failure
 }
 
 @test "single tag, at tag, clean" {
     git tag -a -m "v1.0.0" v1.0.0
-    run git-vsn
+    run git-vsn -t v
 
     # TODO: Doesn't spot that the tag is not pushed.
     assert_output '1.0.0+5fcf07cb8e'
@@ -49,7 +49,7 @@ setup() {
 @test "single tag, at tag, new file" {
     git tag -a -m "v1.0.0" v1.0.0
     touch new-file
-    run git-vsn
+    run git-vsn -t v
 
     # Note: we don't add '.dirty' for new files that aren't staged or committed; since your build process might generate
     # them, which would pollute the version number. Only changed files add '.dirty'.
@@ -60,7 +60,7 @@ setup() {
     git tag -a -m "v1.0.0" v1.0.0
     touch staged-change
     git add staged-change
-    run git-vsn
+    run git-vsn -t v
 
     assert_output '1.0.0+5fcf07cb8e.dirty'
 }
@@ -73,7 +73,7 @@ setup() {
     GIT_COMMITTER_DATE='2022-11-06T17:24:45Z' \
     GIT_AUTHOR_DATE='2022-11-06T17:24:45Z' \
         git commit -m "committed-file"
-    run git-vsn
+    run git-vsn -t v
 
     assert_output '1.1.0-pre+f11a3c209b.dirty'
 }
@@ -87,7 +87,7 @@ setup() {
     GIT_AUTHOR_DATE='2022-11-06T17:24:45Z' \
         git commit -m "changed-file"
     echo 'change' >> changed-file
-    run git-vsn
+    run git-vsn -t v
 
     assert_output '1.1.0-pre+ab51346374.dirty'
 }
@@ -109,7 +109,7 @@ setup() {
         git commit -m "changed-file"
     git push
 
-    run git-vsn
+    run git-vsn -t v
 
     assert_output '1.1.0-pre+c89fc10692'
 }
@@ -117,7 +117,7 @@ setup() {
 @test "GIT_VSN environment variable overrides behaviour" {
     git tag -a -m "v1.0.0" v1.0.0
     export GIT_VSN=1.2.0+5fcf07cb8e
-    run git-vsn
+    run git-vsn -t v
 
     assert_output '1.2.0+5fcf07cb8e'
 }
@@ -128,7 +128,7 @@ setup() {
     # ignore it inside the work tree.
     git tag -a -m "v1.0.0" v1.0.0
     echo "1.2.0+5fcf07cb8e" > .git-vsn
-    run git-vsn
+    run git-vsn -t v
 
     assert_output '1.0.0+5fcf07cb8e'
 }
