@@ -79,7 +79,7 @@ if [[ $description =~ $describe_re ]]; then
     commits="${BASH_REMATCH[4]}"
     sha="${BASH_REMATCH[5]}"
 else
-    echo "Error: '${description}' didn't match regex; are you using annotated tags that look like '${TAG_PREFIX}1.2.3'?"
+    >&2 echo "Error: '${description}' didn't match regex; are you using annotated tags that look like '${TAG_PREFIX}1.2.3'?"
     exit 1
 fi
 
